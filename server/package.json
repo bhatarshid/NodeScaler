@@ -1,0 +1,22 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Building a dynamic load balancing and auto-scaling system",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bhatarshid/NodeScaler.git"
+  },
+  "author": "arshid",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bhatarshid/NodeScaler/issues"
+  },
+  "homepage": "https://github.com/bhatarshid/NodeScaler#readme",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
