@@ -1,0 +1,23 @@
+{
+  "name": "load-balancer",
+  "version": "1.0.0",
+  "description": "load balancer",
+  "main": "index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "npm run build && node ./dist/load-balancer/src/index.js"
+  },
+  "author": "arshid",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/axios": "^0.14.4",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.2",
+    "axios": "^1.7.9",
+    "express": "^4.21.2"
+  }
+}
