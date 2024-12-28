@@ -12,15 +12,12 @@ app.get('/test', (req, res) => {
   res.send('Hello, World!, Test');
 });
 
-app.post('/test', (req, res) => {
-  console.log(req.body); // Prints the request body
+app.get('/test', (req, res) => {
   res.send('Hello, World!, Test ' + req.body);
 })
 
-export default async function createServer (PORTS: number[]) {
-  PORTS.forEach((port) => {
-    app.listen(port, () => {
-      console.log(`Server is running on http://localhost:${port}`);
-    });
-  });
-}
+const port = process.argv[2] || 5000; 
+
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
