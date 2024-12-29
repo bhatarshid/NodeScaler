@@ -4,13 +4,14 @@ import roundRobinAlgo from './algorithms/round-robin.js';
 import bodyParser from 'body-parser';
 import { startNewInstance } from './server.js';
 import './auto-scaling/auto-scaler.js';
+import { ChildProcess } from 'child_process';
 
 dotenv.config();
 
 const app = express();
 app.use(bodyParser.json());
 
-export const INSTANCES: { port: number; pid: number | undefined }[] = [];
+export const INSTANCES: { port: number; child: ChildProcess }[] = [];
 
 // round robin algorithm
 app.use('/', roundRobinAlgo);

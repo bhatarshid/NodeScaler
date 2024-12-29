@@ -1,36 +1,37 @@
-import { exec } from "child_process";
+import { ChildProcess, spawn } from "child_process";
 import { INSTANCES } from "./index.js";
 
 const SERVER_PATH = '../server/dist/index.js';
 
 export function startNewInstance () {
   const port = Number(process.env.PORT) + INSTANCES.length + 1;
-  const newInstance = exec(`node ${SERVER_PATH} ${port}`, (error, stdout, stderr) => {
-      if (error) {
-          console.error(`Error starting new instance: ${error.message}`);
-          return;
-      }
-      if (stderr) {
-          console.error(`stderr: ${stderr}`);
-          return;
-      }
-      console.log(`stdout: ${stdout}`);
-  });
+  const newInstance: ChildProcess = spawn('node', [SERVER_PATH, port.toString()]);
 
-  INSTANCES.push({ port, pid: newInstance.pid });
-  console.log({INSTANCES})
+  newInstance.stdout?.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+    INSTANCES.push({ port, child: newInstance });
+    console.log({INSTANCES})
+  });
+  newInstance.stderr?.on('data', (data) => {
+    console.error(`stderr: ${data}`);
+  });
+  newInstance.on('error', (error) => {
+    console.error(`Error starting new instance: ${error.message}`);
+  }); 
 }
 
-export function terminateInstance (pid: number): Promise<void> {
-  return new Promise((resolve, reject) => {
-    exec(`kill -SIGTERM ${pid}`, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Error stopping server with PID ${pid}:`, error);
-        reject(error);
-      } else {
-        console.log(`Server with PID ${pid} stopped.`);
-        resolve();
+export function terminateInstance (instance: ChildProcess) {
+  if (instance && !instance.killed) {
+    instance.kill('SIGTERM')
+
+    // Wait for the process to exit, or force kill if it doesn't exit in time
+    setTimeout(() => {
+      if (!instance.killed) {
+        instance.kill('SIGKILL'); // Force kill if SIGTERM didn't work
       }
-    });
-  });
+      console.log({INSTANCES})
+    }, 5000);
+  } else {
+    console.log("The instance was either not running or already killed");
+  }
 }
